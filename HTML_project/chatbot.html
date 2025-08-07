@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zyra Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink: #c42b2b;
+      --pink-dark: #b92a2a;
+    }
+    body {
+      margin: 0;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Floating Button */
+    #chat-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--pink);
+      color: white;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      z-index: 10000;
+    }
+
+    /* Chat Box */
+    #chat-box {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 300px;
+      max-height: 400px;
+      background: white;
+      border: 1px solid var(--pink);
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 9999;
+    }
+
+    #chat-header {
+      background: var(--pink);
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    #chat-body {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+
+    .message {
+      margin: 5px 0;
+      padding: 6px 10px;
+      border-radius: 5px;
+      max-width: 80%;
+    }
+    .bot { background: #f1f1f1; color: #333; }
+    .user { background: var(--red); color: white; margin-left: auto; }
+
+    #chat-footer {
+      display: flex;
+      border-top: 1px solid #ccc;
+    }
+    #chat-input {
+      flex: 1;
+      border: none;
+      padding: 10px;
+      font-size: 14px;
+    }
+    #chat-send {
+      background: var(--red);
+      border: none;
+      color: white;
+      padding: 0 15px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="chat-toggle">💬</div>
+
+  <div id="chat-box">
+    <div id="chat-header">Zyra Assistant</div>
+    <div id="chat-body"></div>
+    <div id="chat-footer">
+      <input id="chat-input" type="text" placeholder="Ask me anything..." />
+      <button id="chat-send">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById('chat-toggle');
+    const chatBox = document.getElementById('chat-box');
+    const chatBody = document.getElementById('chat-body');
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('chat-send');
+
+    toggleBtn.addEventListener('click', () => {
+      chatBox.style.display = chatBox.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    sendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    function addMessage(text, sender = 'bot') {
+      const msg = document.createElement('div');
+      msg.classList.add('message', sender);
+      msg.textContent = text;
+      chatBody.appendChild(msg);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function sendMessage() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      addMessage(text, 'user');
+      chatInput.value = '';
+      setTimeout(() => botReply(text), 500);
+    }
+
+    function botReply(userText) {
+      const lower = userText.toLowerCase();
+      let reply = "I'm not sure about that. Can you clarify?";
+
+      if (lower.includes('hello') || lower.includes('hi')) reply = "Hi! How can I help you today?";
+      else if (lower.includes('wishlist')) reply = "You can view your wishlist in the 'My Wishlist' section.";
+      else if (lower.includes('cart')) reply = "Your cart is accessible from the cart icon at the top.";
+      else if (lower.includes('footwear')) reply = "Check out our latest collection of stylish footwear!";
+      else if (lower.includes('dress')) reply = "We have some great dresses in the women's section!";
+      
+      addMessage(reply);
+    }
+
+    // Welcome message
+    addMessage("Hi! I'm Zyra Assistant. Ask me about products, wishlist, or your cart.");
+  </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zyra | Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Outfit', sans-serif; background: #fff0f5; margin: 0; color: #333; 
+      background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsaUeJduR_-Ah41ZOafoGZgi38ZiajJURZPw&s");  
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      height: 100%;
+      width: 100%;
+      margin: 0;
+    }
+    header, footer { background: maroon; color: white; padding: 15px; text-align: center; }
+    .profile-container { max-width: 400px; margin: 40px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .profile-container h2 { text-align: center; }
+    input[type="text"], input[type="password"] {
+      width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px;
+    }
+    button {
+      width: 100%; padding: 10px; background: maroon; border: none; color: white; font-weight: bold; border-radius: 5px; cursor: pointer;
+    }
+    button:hover { background: maroon; }
+    .toggle-link { text-align: center; margin-top: 10px; color: #555; cursor: pointer; }
+    .user-display { text-align: center; margin-top: 20px; color: #444; font-weight: bold; display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Profile</h1>
+  </header>
+
+  <div class="profile-container">
+    <h2 id="formTitle">Login</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="submitForm()">Login</button>
+    <div class="toggle-link" onclick="toggleForm()">Don't have an account? Register</div>
+    <div class="user-display" id="userWelcome"></div>
+    <button id="logoutBtn" style="display:none; margin-top: 15px;" onclick="logout()">Logout</button>
+  </div>
+
+  <footer>
+    &copy; 2025 Zyra | <a href="index.html" style="color: white; text-decoration: underline;">Back to Home</a>
+  </footer>
+
+  <!-- Chatbot Integration -->
+  <div id="chatbot-container"></div>
+  <script src="chatbot.js"></script>
+
+  <script>
+    let isLogin = true;
+    const formTitle = document.getElementById('formTitle');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const button = document.querySelector('button');
+    const toggleText = document.querySelector('.toggle-link');
+    const welcome = document.getElementById('userWelcome');
+
+    function toggleForm() {
+      isLogin = !isLogin;
+      formTitle.innerText = isLogin ? 'Login' : 'Register';
+      button.innerText = isLogin ? 'Login' : 'Register';
+      toggleText.innerText = isLogin ? "Don't have an account? Register" : "Already have an account? Login";
+    }
+
+    function submitForm() {
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      if (!username || !password) {
+        alert("Please fill in both fields.");
+        return;
+      }
+
+      localStorage.setItem('GrabXUser', username);
+      welcome.innerText = `${isLogin ? 'Welcome back' : 'Thanks for registering'}, ${username}!`;
+      welcome.style.display = 'block';
+      usernameInput.style.display = 'none';
+      passwordInput.style.display = 'none';
+      button.style.display = 'none';
+      toggleText.style.display = 'none';
+      document.getElementById('logoutBtn').style.display = 'block';
+    }
+
+    window.onload = () => {
+      const logoutBtn = document.getElementById('logoutBtn');
+      const savedUser = localStorage.getItem('GrabXUser');
+      if (savedUser) {
+        welcome.innerText = `Welcome back, ${savedUser}!`;
+        welcome.style.display = 'block';
+        logoutBtn.style.display = 'block';
+        usernameInput.style.display = 'none';
+        passwordInput.style.display = 'none';
+        button.style.display = 'none';
+        toggleText.style.display = 'none';
+        formTitle.innerText = 'Profile';
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('GrabXUser');
+      location.reload();
+    }
+  </script>
+  
+
+
+</body>
+</html>
